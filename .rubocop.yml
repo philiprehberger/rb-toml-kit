@@ -64,12 +64,14 @@ Metrics/CyclomaticComplexity:
   Exclude:
     - "lib/philiprehberger/toml_kit/parser.rb"
     - "lib/philiprehberger/toml_kit/serializer.rb"
+    - "lib/philiprehberger/toml_kit/comment_document.rb"
 
 Metrics/PerceivedComplexity:
   Max: 25
   Exclude:
     - "lib/philiprehberger/toml_kit/parser.rb"
     - "lib/philiprehberger/toml_kit/serializer.rb"
+    - "lib/philiprehberger/toml_kit/comment_document.rb"
 
 Metrics/ClassLength:
   Max: 300
@@ -131,9 +133,14 @@ Lint/DuplicateHashKey:
 Naming/PredicatePrefix:
   Enabled: false
 
+Metrics/BlockNesting:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/comment_document.rb"
+
 Naming/PredicateMethod:
   Exclude:
     - "lib/philiprehberger/toml_kit/parser.rb"
+    - "lib/philiprehberger/toml_kit/schema.rb"
 
 Naming/AccessorMethodName:
   Enabled: false
