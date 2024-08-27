@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-toml_kit.svg)](https://rubygems.org/gems/philiprehberger-toml_kit)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-toml-kit)](https://github.com/philiprehberger/rb-toml-kit/commits/main)
 
-TOML v1.0 parser and serializer for Ruby with comment preservation, schema validation, merging, querying, type coercion, and diffing.
+TOML v1.0 parser and serializer for Ruby with comment preservation, schema validation, merging, querying, type coercion, and diffing
 
 ## Requirements
 
