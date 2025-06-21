@@ -7,7 +7,8 @@ Gem::Specification.new do |spec|
   spec.version = Philiprehberger::TomlKit::VERSION
   spec.authors = ['Philip Rehberger']
   spec.email = ['me@philiprehberger.com']
-  spec.summary = 'TOML v1.0 parser and serializer for Ruby with comment preservation, schema validation, merging, querying, type coercion, and diffing'
+  spec.summary = 'TOML v1.0 parser and serializer for Ruby with comment preservation, schema validation, ' \
+                 'merging, querying, type coercion, and diffing'
   spec.description = 'Parse and generate TOML v1.0 documents with full type support including ' \
                      'datetimes, inline tables, and array of tables. Zero dependencies.'
   spec.homepage = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-toml_kit'
