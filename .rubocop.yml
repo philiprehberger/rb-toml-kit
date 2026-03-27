@@ -1,0 +1,47 @@
+AllCops:
+  TargetRubyVersion: 3.1
+  NewCops: enable
+  SuggestExtensions: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/ClassLength:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/parser.rb"
+    - "lib/philiprehberger/toml_kit/serializer.rb"
+
+Metrics/MethodLength:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/parser.rb"
+    - "lib/philiprehberger/toml_kit/serializer.rb"
+
+Metrics/AbcSize:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/parser.rb"
+    - "lib/philiprehberger/toml_kit/serializer.rb"
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/parser.rb"
+    - "lib/philiprehberger/toml_kit/serializer.rb"
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/parser.rb"
+    - "lib/philiprehberger/toml_kit/serializer.rb"
+
+Naming/PredicateMethod:
+  Exclude:
+    - "lib/philiprehberger/toml_kit/parser.rb"
