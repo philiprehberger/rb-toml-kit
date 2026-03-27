@@ -35,6 +35,9 @@ Style/MultilineBlockChain:
 Style/IdenticalConditionalBranches:
   Enabled: false
 
+Style/IfUnlessModifier:
+  Enabled: false
+
 Style/FileOpen:
   Enabled: false
 
@@ -131,6 +134,9 @@ Naming/PredicatePrefix:
 Naming/PredicateMethod:
   Exclude:
     - "lib/philiprehberger/toml_kit/parser.rb"
+
+Naming/AccessorMethodName:
+  Enabled: false
 
 Naming/MethodParameterName:
   Enabled: false
