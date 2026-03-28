@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-03-28
+
+### Added
+
+- Comment preservation during round-trip parse/serialize via `TomlKit.parse_with_comments` and `CommentDocument`
+- TOML schema validation with `Schema` class supporting required keys, type checks, nested properties, and array items
+- TOML merging with conflict resolution strategies (`:override`, `:keep_existing`, `:error_on_conflict`) via `TomlKit.merge`
+- Dot-path query support via `TomlKit.query` with array indexing, `Query.set`, `Query.exists?`, and `Query.delete`
+- Type coercion hooks via `TypeCoercion` for custom serializer/deserializer registration with optional tagged round-trips
+- TOML diff via `TomlKit.diff` to compare two documents reporting additions, removals, and changes
+
 ## [0.1.1] - 2026-03-26
 
 ### Added

@@ -1,14 +1,25 @@
 # frozen_string_literal: true
 
 require_relative 'toml_kit/version'
-require_relative 'toml_kit/parser'
-require_relative 'toml_kit/serializer'
 
 module Philiprehberger
   module TomlKit
     class Error < StandardError; end
     class ParseError < Error; end
+  end
+end
 
+require_relative 'toml_kit/parser'
+require_relative 'toml_kit/serializer'
+require_relative 'toml_kit/comment_document'
+require_relative 'toml_kit/schema'
+require_relative 'toml_kit/merger'
+require_relative 'toml_kit/query'
+require_relative 'toml_kit/type_coercion'
+require_relative 'toml_kit/diff'
+
+module Philiprehberger
+  module TomlKit
     # Parse a TOML string into a Ruby Hash.
     #
     # @param string [String] TOML document
@@ -43,6 +54,43 @@ module Philiprehberger
     # @return [void]
     def self.save(hash, path)
       File.write(path, dump(hash), encoding: 'utf-8')
+    end
+
+    # Parse a TOML string preserving comments for round-trip editing.
+    #
+    # @param string [String] TOML document
+    # @return [CommentDocument] document with data and comments
+    def self.parse_with_comments(string)
+      CommentDocument.parse(string)
+    end
+
+    # Query a nested value using a dot-path.
+    #
+    # @param data [Hash] parsed TOML hash
+    # @param path [String] dot-separated path (e.g., "database.host")
+    # @param default [Object] fallback value
+    # @return [Object]
+    def self.query(data, path, default: nil)
+      Query.get(data, path, default: default)
+    end
+
+    # Deep merge two TOML hashes.
+    #
+    # @param left [Hash] base hash
+    # @param right [Hash] hash to merge in
+    # @param strategy [Symbol] :override, :keep_existing, or :error_on_conflict
+    # @return [Hash]
+    def self.merge(left, right, strategy: :override)
+      Merger.merge(left, right, strategy: strategy)
+    end
+
+    # Compare two TOML hashes and return differences.
+    #
+    # @param left [Hash] first document
+    # @param right [Hash] second document
+    # @return [Array<Diff::Change>]
+    def self.diff(left, right)
+      Diff.diff(left, right)
     end
   end
 end

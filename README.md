@@ -1,11 +1,8 @@
 # philiprehberger-toml_kit
 
-[![Tests](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml)
-[![Gem Version](https://badge.fury.io/rb/philiprehberger-toml_kit.svg)](https://rubygems.org/gems/philiprehberger-toml_kit)
-[![License](https://img.shields.io/github/license/philiprehberger/rb-toml-kit)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
+[![Tests](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml) [![Gem Version](https://img.shields.io/gem/v/philiprehberger-toml_kit)](https://rubygems.org/gems/philiprehberger-toml_kit) [![GitHub release](https://img.shields.io/github/v/release/philiprehberger/rb-toml-kit)](https://github.com/philiprehberger/rb-toml-kit/releases) [![GitHub last commit](https://img.shields.io/github/last-commit/philiprehberger/rb-toml-kit)](https://github.com/philiprehberger/rb-toml-kit/commits/main) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Bug Reports](https://img.shields.io/badge/bug-reports-red.svg)](https://github.com/philiprehberger/rb-toml-kit/issues) [![Feature Requests](https://img.shields.io/badge/feature-requests-blue.svg)](https://github.com/philiprehberger/rb-toml-kit/issues) [![GitHub Sponsors](https://img.shields.io/badge/sponsor-philiprehberger-ea4aaa.svg?logo=github)](https://github.com/sponsors/philiprehberger)
 
-TOML v1.0 parser and serializer for Ruby
+TOML v1.0 parser and serializer for Ruby with comment preservation, schema validation, merging, querying, type coercion, and diffing.
 
 ## Requirements
 
@@ -108,6 +105,147 @@ TOML
 data = Philiprehberger::TomlKit.parse(toml)
 ```
 
+### Comment Preservation
+
+Parse a TOML document while preserving comments for round-trip editing:
+
+```ruby
+toml = <<~TOML
+  # Application config
+  title = "My App"
+
+  # Database settings
+  [database]
+  host = "localhost" # primary host
+TOML
+
+doc = Philiprehberger::TomlKit.parse_with_comments(toml)
+doc["title"]                    # => "My App"
+doc["database"]["host"]         # => "localhost" (via doc.data)
+doc.header_comments             # => ["# Application config"]
+doc.comments["database.host"]   # => {inline: "# primary host"}
+
+# Modify and re-serialize with comments intact
+doc["title"] = "New App"
+output = doc.to_toml
+# Comments are preserved in the output
+```
+
+### Schema Validation
+
+Define expected structure and validate parsed TOML against it:
+
+```ruby
+schema = Philiprehberger::TomlKit::Schema.new(
+  "name" => { type: String, required: true },
+  "port" => { type: Integer, required: true },
+  "database" => {
+    type: Hash,
+    required: true,
+    properties: {
+      "host" => { type: String, required: true },
+      "port" => { type: Integer }
+    }
+  },
+  "tags" => { type: Array, items: { type: String } }
+)
+
+data = Philiprehberger::TomlKit.parse(toml_string)
+errors = schema.validate(data)
+# => [] if valid, or ["Missing required key: name", ...]
+
+schema.validate!(data) # raises SchemaError if invalid
+```
+
+### Merging
+
+Deep merge two TOML hashes with conflict resolution:
+
+```ruby
+base = Philiprehberger::TomlKit.parse(base_toml)
+overrides = Philiprehberger::TomlKit.parse(override_toml)
+
+# Right-side wins (default)
+merged = Philiprehberger::TomlKit.merge(base, overrides)
+
+# Left-side wins
+merged = Philiprehberger::TomlKit.merge(base, overrides, strategy: :keep_existing)
+
+# Raise on conflict
+merged = Philiprehberger::TomlKit.merge(base, overrides, strategy: :error_on_conflict)
+# raises MergeConflictError if keys conflict
+```
+
+### Query Support
+
+Access nested values using dot-paths:
+
+```ruby
+data = Philiprehberger::TomlKit.parse(toml_string)
+
+Philiprehberger::TomlKit.query(data, "database.host")
+# => "localhost"
+
+Philiprehberger::TomlKit.query(data, "servers[0].name")
+# => "alpha"
+
+Philiprehberger::TomlKit.query(data, "missing.path", default: "N/A")
+# => "N/A"
+
+# Additional Query methods
+Philiprehberger::TomlKit::Query.set(data, "database.timeout", 30)
+Philiprehberger::TomlKit::Query.exists?(data, "database.host")  # => true
+Philiprehberger::TomlKit::Query.delete(data, "database.timeout") # => 30
+```
+
+### Type Coercion Hooks
+
+Register custom serializers and deserializers for Ruby types:
+
+```ruby
+coercion = Philiprehberger::TomlKit::TypeCoercion.new
+
+coercion.register(
+  Symbol,
+  tag: "symbol",
+  serializer: ->(v) { v.to_s },
+  deserializer: ->(v) { v.to_sym }
+)
+
+# Serialize: converts symbols to tagged strings
+data = { "key" => :hello }
+serialized = coercion.coerce_for_serialize(data)
+toml = Philiprehberger::TomlKit.dump(serialized)
+
+# Deserialize: converts tagged strings back to symbols
+parsed = Philiprehberger::TomlKit.parse(toml)
+restored = coercion.coerce_for_deserialize(parsed)
+restored["key"] # => :hello
+```
+
+### TOML Diff
+
+Compare two TOML documents and report differences:
+
+```ruby
+old_config = Philiprehberger::TomlKit.parse(old_toml)
+new_config = Philiprehberger::TomlKit.parse(new_toml)
+
+changes = Philiprehberger::TomlKit.diff(old_config, new_config)
+changes.each do |change|
+  puts "#{change.type}: #{change.path}"
+  # => :added, :removed, or :changed
+end
+
+# Filter by type
+Philiprehberger::TomlKit::Diff.additions(old_config, new_config)
+Philiprehberger::TomlKit::Diff.removals(old_config, new_config)
+Philiprehberger::TomlKit::Diff.changes(old_config, new_config)
+
+# Check equality
+Philiprehberger::TomlKit::Diff.identical?(old_config, new_config)
+```
+
 ## API
 
 | Method | Description |
@@ -116,6 +254,26 @@ data = Philiprehberger::TomlKit.parse(toml)
 | `TomlKit.load(path)` | Parse a TOML file into a Hash |
 | `TomlKit.dump(hash)` | Serialize a Hash to a TOML string |
 | `TomlKit.save(hash, path)` | Write a Hash as a TOML file |
+| `TomlKit.parse_with_comments(string)` | Parse TOML preserving comments, returns `CommentDocument` |
+| `TomlKit.query(data, path, default:)` | Dot-path access into nested hashes |
+| `TomlKit.merge(left, right, strategy:)` | Deep merge two hashes with conflict resolution |
+| `TomlKit.diff(left, right)` | Compare two hashes, returns array of `Diff::Change` |
+| `Schema.new(properties)` | Create a schema for validation |
+| `Schema#validate(data)` | Validate data, returns array of error strings |
+| `Schema#validate!(data)` | Validate data, raises `SchemaError` on failure |
+| `Query.get(data, path, default:)` | Retrieve nested value by dot-path |
+| `Query.set(data, path, value)` | Set nested value by dot-path |
+| `Query.exists?(data, path)` | Check if a dot-path exists |
+| `Query.delete(data, path)` | Delete value at dot-path |
+| `Diff.diff(left, right)` | Full diff between two hashes |
+| `Diff.additions(left, right)` | Keys added in right |
+| `Diff.removals(left, right)` | Keys removed from left |
+| `Diff.changes(left, right)` | Keys with changed values |
+| `Diff.identical?(left, right)` | Check if two hashes are equal |
+| `TypeCoercion#register(type, ...)` | Register custom type handler |
+| `TypeCoercion#coerce_for_serialize(value)` | Apply serialization coercions |
+| `TypeCoercion#coerce_for_deserialize(value)` | Apply deserialization coercions |
+| `Merger.merge(left, right, strategy:)` | Merge with strategy |
 
 ## Development
 
@@ -124,6 +282,10 @@ bundle install
 bundle exec rspec
 bundle exec rubocop
 ```
+
+## Support
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Philip%20Rehberger-blue?logo=linkedin)](https://linkedin.com/in/philiprehberger) [![More Packages](https://img.shields.io/badge/more-packages-blue.svg)](https://github.com/philiprehberger?tab=repositories)
 
 ## License
 
