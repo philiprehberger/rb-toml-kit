@@ -1,6 +1,8 @@
 # philiprehberger-toml_kit
 
-[![Tests](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml) [![Gem Version](https://img.shields.io/gem/v/philiprehberger-toml_kit)](https://rubygems.org/gems/philiprehberger-toml_kit) [![GitHub release](https://img.shields.io/github/v/release/philiprehberger/rb-toml-kit)](https://github.com/philiprehberger/rb-toml-kit/releases) [![GitHub last commit](https://img.shields.io/github/last-commit/philiprehberger/rb-toml-kit)](https://github.com/philiprehberger/rb-toml-kit/commits/main) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Bug Reports](https://img.shields.io/badge/bug-reports-red.svg)](https://github.com/philiprehberger/rb-toml-kit/issues) [![Feature Requests](https://img.shields.io/badge/feature-requests-blue.svg)](https://github.com/philiprehberger/rb-toml-kit/issues) [![GitHub Sponsors](https://img.shields.io/badge/sponsor-philiprehberger-ea4aaa.svg?logo=github)](https://github.com/sponsors/philiprehberger)
+[![Tests](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-toml-kit/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/philiprehberger-toml_kit.svg)](https://rubygems.org/gems/philiprehberger-toml_kit)
+[![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-toml-kit)](https://github.com/philiprehberger/rb-toml-kit/commits/main)
 
 TOML v1.0 parser and serializer for Ruby with comment preservation, schema validation, merging, querying, type coercion, and diffing.
 
@@ -285,7 +287,21 @@ bundle exec rubocop
 
 ## Support
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Philip%20Rehberger-blue?logo=linkedin)](https://linkedin.com/in/philiprehberger) [![More Packages](https://img.shields.io/badge/more-packages-blue.svg)](https://github.com/philiprehberger?tab=repositories)
+If you find this project useful:
+
+⭐ [Star the repo](https://github.com/philiprehberger/rb-toml-kit)
+
+🐛 [Report issues](https://github.com/philiprehberger/rb-toml-kit/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
+💡 [Suggest features](https://github.com/philiprehberger/rb-toml-kit/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+
+❤️ [Sponsor development](https://github.com/sponsors/philiprehberger)
+
+🌐 [All Open Source Projects](https://philiprehberger.com/open-source-packages)
+
+💻 [GitHub Profile](https://github.com/philiprehberger)
+
+🔗 [LinkedIn Profile](https://www.linkedin.com/in/philiprehberger)
 
 ## License
 
