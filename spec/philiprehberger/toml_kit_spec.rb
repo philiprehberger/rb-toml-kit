@@ -280,6 +280,20 @@ RSpec.describe Philiprehberger::TomlKit do
     end
   end
 
+  describe '.valid?' do
+    it 'returns true for valid TOML' do
+      expect(described_class.valid?('key = "value"')).to be true
+    end
+
+    it 'returns false for invalid TOML' do
+      expect(described_class.valid?('key = [broken')).to be false
+    end
+
+    it 'returns true for an empty document' do
+      expect(described_class.valid?('')).to be true
+    end
+  end
+
   describe '.dump' do
     it 'serializes simple key-value pairs' do
       hash = { 'name' => 'test', 'version' => 1 }

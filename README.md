@@ -56,6 +56,15 @@ config["database"]["host"]   # => "localhost"
 config["servers"][0]["name"]  # => "alpha"
 ```
 
+### Validity Check
+
+Check whether a string is valid TOML without raising:
+
+```ruby
+Philiprehberger::TomlKit.valid?('key = "value"')  # => true
+Philiprehberger::TomlKit.valid?('key = [broken')  # => false
+```
+
 ### Loading Files
 
 ```ruby
@@ -253,6 +262,7 @@ Philiprehberger::TomlKit::Diff.identical?(old_config, new_config)
 | Method | Description |
 |--------|-------------|
 | `TomlKit.parse(string)` | Parse a TOML string into a Hash |
+| `TomlKit.valid?(string)` | Return `true` if the string parses as valid TOML |
 | `TomlKit.load(path)` | Parse a TOML file into a Hash |
 | `TomlKit.dump(hash)` | Serialize a Hash to a TOML string |
 | `TomlKit.save(hash, path)` | Write a Hash as a TOML file |

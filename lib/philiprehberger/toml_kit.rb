@@ -29,6 +29,17 @@ module Philiprehberger
       Parser.new.parse(string)
     end
 
+    # Check whether a string parses as valid TOML without raising.
+    #
+    # @param string [String] TOML document
+    # @return [Boolean] true if the string is valid TOML
+    def self.valid?(string)
+      parse(string)
+      true
+    rescue ParseError
+      false
+    end
+
     # Parse a TOML file into a Ruby Hash.
     #
     # @param path [String] path to a TOML file
