@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-30
+
+### Added
+- `TomlKit.set(data, path, value)` — set a nested value at a dot-path, creating intermediate hashes as needed (mirrors `TomlKit.query`)
+- `TomlKit.delete(data, path)` — delete a nested key by dot-path; returns the removed value or `nil`
+- `TomlKit.exists?(data, path)` — check whether a dot-path resolves to a value
+
 ## [0.3.0] - 2026-04-15
 
 ### Added

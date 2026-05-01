@@ -85,6 +85,36 @@ module Philiprehberger
       Query.get(data, path, default: default)
     end
 
+    # Set a nested value using a dot-path. Creates intermediate hashes/arrays
+    # as needed and mutates `data` in place. Returns the value that was set.
+    #
+    # @param data [Hash] target hash
+    # @param path [String] dot-separated path (e.g., "database.host")
+    # @param value [Object] the value to set
+    # @return [Object] the value that was set
+    def self.set(data, path, value)
+      Query.set(data, path, value)
+    end
+
+    # Delete a value at the given dot-path. Returns the removed value or `nil`
+    # if the path did not resolve.
+    #
+    # @param data [Hash] target hash
+    # @param path [String] dot-separated path
+    # @return [Object, nil] the removed value, or nil
+    def self.delete(data, path)
+      Query.delete(data, path)
+    end
+
+    # Check whether a value exists at the given dot-path.
+    #
+    # @param data [Hash] target hash
+    # @param path [String] dot-separated path
+    # @return [Boolean]
+    def self.exists?(data, path)
+      Query.exists?(data, path)
+    end
+
     # Deep merge two TOML hashes.
     #
     # @param left [Hash] base hash

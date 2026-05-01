@@ -203,10 +203,10 @@ Philiprehberger::TomlKit.query(data, "servers[0].name")
 Philiprehberger::TomlKit.query(data, "missing.path", default: "N/A")
 # => "N/A"
 
-# Additional Query methods
-Philiprehberger::TomlKit::Query.set(data, "database.timeout", 30)
-Philiprehberger::TomlKit::Query.exists?(data, "database.host")  # => true
-Philiprehberger::TomlKit::Query.delete(data, "database.timeout") # => 30
+# Top-level mutators (mirror TomlKit.query)
+Philiprehberger::TomlKit.set(data, "database.timeout", 30)
+Philiprehberger::TomlKit.exists?(data, "database.host")  # => true
+Philiprehberger::TomlKit.delete(data, "database.timeout") # => 30
 ```
 
 ### Type Coercion Hooks
@@ -268,6 +268,9 @@ Philiprehberger::TomlKit::Diff.identical?(old_config, new_config)
 | `TomlKit.save(hash, path)` | Write a Hash as a TOML file |
 | `TomlKit.parse_with_comments(string)` | Parse TOML preserving comments, returns `CommentDocument` |
 | `TomlKit.query(data, path, default:)` | Dot-path access into nested hashes |
+| `TomlKit.set(data, path, value)` | Set a nested value by dot-path; creates intermediate hashes as needed |
+| `TomlKit.delete(data, path)` | Delete a nested key by dot-path; returns the removed value or `nil` |
+| `TomlKit.exists?(data, path)` | Check whether a dot-path resolves to a value |
 | `TomlKit.merge(left, right, strategy:)` | Deep merge two hashes with conflict resolution |
 | `TomlKit.diff(left, right)` | Compare two hashes, returns array of `Diff::Change` |
 | `Schema.new(properties)` | Create a schema for validation |

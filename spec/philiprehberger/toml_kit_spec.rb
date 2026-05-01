@@ -778,6 +778,42 @@ RSpec.describe Philiprehberger::TomlKit do
         expect(Philiprehberger::TomlKit::Query.delete(hash, 'missing')).to be_nil
       end
     end
+
+    describe 'top-level dot-path helpers' do
+      it 'TomlKit.set creates intermediate hashes and sets a leaf value' do
+        hash = {}
+        described_class.set(hash, 'database.host', 'localhost')
+        expect(hash).to eq('database' => { 'host' => 'localhost' })
+      end
+
+      it 'TomlKit.set overwrites an existing leaf value' do
+        hash = { 'a' => 1 }
+        described_class.set(hash, 'a', 99)
+        expect(hash['a']).to eq(99)
+      end
+
+      it 'TomlKit.delete removes a leaf and returns its value' do
+        hash = { 'db' => { 'host' => 'localhost' } }
+        expect(described_class.delete(hash, 'db.host')).to eq('localhost')
+        expect(hash['db']).not_to have_key('host')
+      end
+
+      it 'TomlKit.delete returns nil for missing paths' do
+        expect(described_class.delete({ 'a' => 1 }, 'missing')).to be_nil
+      end
+
+      it 'TomlKit.exists? mirrors Query.exists?' do
+        expect(described_class.exists?({ 'a' => 1 }, 'a')).to be true
+        expect(described_class.exists?({ 'a' => 1 }, 'b')).to be false
+      end
+
+      it 'round-trips parse → set → dump' do
+        data = described_class.parse('a = 1')
+        described_class.set(data, 'b.c', 2)
+        parsed_back = described_class.parse(described_class.dump(data))
+        expect(parsed_back).to eq('a' => 1, 'b' => { 'c' => 2 })
+      end
+    end
   end
 
   describe 'TypeCoercion' do
